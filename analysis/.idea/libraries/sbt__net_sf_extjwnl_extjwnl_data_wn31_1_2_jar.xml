@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: net.sf.extjwnl:extjwnl-data-wn31:1.2:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/net.sf.extjwnl/extjwnl-data-wn31/jars/extjwnl-data-wn31-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/net.sf.extjwnl/extjwnl-data-wn31/srcs/extjwnl-data-wn31-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
