@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import analyses._
+import classifier.Utils
 import helper.AndroidJarAnalysis
 import org.apache.commons.cli.{DefaultParser, Options}
 import org.opalj.br.analyses.Project
@@ -75,22 +76,26 @@ object StringDecryption {
         println("File not found: " + filename)
         throw new Exception("File not found: " + filename)
       }
+      var jar = file
+      if (file.getName.endsWith(".apk")) {
+        jar = Utils.enjarify(file.getAbsolutePath)
+      }
       var filterSet = Set.empty[String]
       val bruteforce = line.hasOption("bf")
       val debug = line.hasOption("debug")
       if (line.hasOption("s")) {
         if (line.hasOption("stm")) {
-          runOnOneFile(file, "stm", filterSet, bruteforce, debug, !line.hasOption("j"))
+          runOnOneFile(jar, "stm", filterSet, bruteforce, debug, !line.hasOption("j"))
         } else if (line.hasOption("st")) {
-          new StringClassifierAnalysis(file, List(file.getName)).doAnalyze(System.currentTimeMillis())
+          new StringClassifierAnalysis(jar, List(file.getName)).doAnalyze(System.currentTimeMillis())
         } else if (line.hasOption("m")) {
-          runOnOneFile(file, "m", filterSet, bruteforce, debug, !line.hasOption("j"))
+          runOnOneFile(jar, "m", filterSet, bruteforce, debug, !line.hasOption("j"))
         } else if (line.hasOption("sstat")) {
-          new StringFeatureExtraction(file, List(file.getName), filterSet).doAnalyze()
+          new StringFeatureExtraction(jar, List(file.getName), filterSet).doAnalyze()
         } else if (line.hasOption("cstat")) {
-          runOnOneFile(file, "cstat", filterSet, bruteforce, debug, !line.hasOption("j"))
+          runOnOneFile(jar, "cstat", filterSet, bruteforce, debug, !line.hasOption("j"))
         } else {
-          runOnOneFile(file, "", filterSet, bruteforce, debug, !line.hasOption("j"))
+          runOnOneFile(jar, "", filterSet, bruteforce, debug, !line.hasOption("j"))
         }
       } else {
         println("Running on path file: " + filename)
@@ -121,8 +126,12 @@ object StringDecryption {
     var line = bufferedReader.readLine()
     var count = 1
     while (line != null) {
-      val jar = new File(line)
-      if (line.nonEmpty && jar.exists() && jar.isFile) {
+      val file = new File(line)
+      if (line.length() > 0 && file.exists() && file.isFile) {
+        var jar = file
+        if (file.getName.endsWith(".apk")) {
+          jar = Utils.enjarify(file.getAbsolutePath)
+        }
         try {
           runOnOneFile(jar, analysis, filterSet, bruteForce, debug, isAndroid)
           println(count + ": " + jar)
@@ -139,6 +148,7 @@ object StringDecryption {
       }
       line = bufferedReader.readLine()
     }
+
     bufferedReader.close()
   }
 
