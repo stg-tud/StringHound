@@ -129,9 +129,6 @@ object StringDecryption {
       val file = new File(line)
       if (line.length() > 0 && file.exists() && file.isFile) {
         var jar = file
-        if (file.getName.endsWith(".apk")) {
-          jar = Utils.enjarify(file.getAbsolutePath)
-        }
         try {
           runOnOneFile(jar, analysis, filterSet, bruteForce, debug, isAndroid)
           println(count + ": " + jar)
