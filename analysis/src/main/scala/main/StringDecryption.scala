@@ -77,9 +77,6 @@ object StringDecryption {
         throw new Exception("File not found: " + filename)
       }
       var jar = file
-      if (file.getName.endsWith(".apk")) {
-        jar = Utils.enjarify(file.getAbsolutePath)
-      }
       var filterSet = Set.empty[String]
       val bruteforce = line.hasOption("bf")
       val debug = line.hasOption("debug")
